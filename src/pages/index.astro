@@ -1,7 +1,15 @@
 ---
+import Topbar from "../components/Topbar.astro";
+import TopbarLogo from "../components/TopbarLogo.astro";
+import TopbarMenu from "../components/TopbarMenu.astro";
+import TopbarMenuButton from "../components/TopbarMenuButton.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-	<h1 class="text-4xl font-bold">Welcome to Astro!</h1>
+	<Topbar>
+		<TopbarLogo />
+		<TopbarMenu />
+		<TopbarMenuButton />
+	</Topbar>
 </Layout>
