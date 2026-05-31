@@ -14,7 +14,9 @@ import { Font } from "astro:assets";
 		<title>Devarturo - Estate</title>
 		<Font cssVariable="--font-geist" />
 	</head>
-	<body class="flex flex-col min-h-dvh font-sans antialiased">
+	<body
+		class="flex flex-col min-h-dvh font-sans antialiased bg-zinc-50 text-zinc-900 selection:bg-emerald-900 selection:text-white"
+	>
 		<slot />
 	</body>
 </html>
