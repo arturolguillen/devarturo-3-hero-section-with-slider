@@ -1,0 +1,42 @@
+---
+import type { SliderItem } from "./../slider.ts";
+
+interface Props {
+    item: SliderItem;
+}
+
+const { item } = Astro.props;
+const { location, place, image } = item;
+---
+
+<button
+    class="flex-none w-52 snap-start group outline-none focus:ring-0 cursor-pointer"
+    data-image={image}
+>
+    <div
+        class="relative aspect-4/5 overflow-hidden mb-3 border border-white/10 group-hover:border-white/40 transition-all duration-500"
+    >
+        <img
+            src={image}
+            alt={place}
+            class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-110 transition-transform duration-700"
+        />
+        <div
+            class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"
+        >
+        </div>
+    </div>
+    <div class="text-left">
+        <span
+            class="block text-[10px] font-bold text-white/60 tracking-widest uppercase mb-1"
+            >{location}</span
+        >
+        <h3 class="text-xl font-bold text-white uppercase tracking-tight">
+            {place}
+        </h3>
+    </div>
+    <div
+        class="h-0.5 w-0 bg-emerald-500 mt-2 group-[.active]:w-full transition-all duration-500"
+    >
+    </div>
+</button>

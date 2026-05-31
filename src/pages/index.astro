@@ -8,9 +8,12 @@ import TopbarMenuButton from "../components/TopbarMenuButton.astro";
 import MainWrapper from "../components/MainWrapper.astro";
 import MainContent from "../components/MainContent.astro";
 import ExploreMoreButton from "../components/ExploreMoreButton.astro";
+import Slider from "../components/Slider.astro";
+import SliderItem from "../components/SliderItem.astro";
 import Icons from "../components/Icons.astro";
 import WorldIcon from "../components/WorldIcon.astro";
 import ShareIcon from "../components/ShareIcon.astro";
+import items from "./../slider.ts";
 ---
 
 <Layout>
@@ -24,6 +27,9 @@ import ShareIcon from "../components/ShareIcon.astro";
 		<MainContent />
 		<ExploreMoreButton />
 	</MainWrapper>
+	<Slider>
+		{items.map((item) => <SliderItem item={item} />)}
+	</Slider>
 	<Icons>
 		<WorldIcon />
 		<ShareIcon />
