@@ -14,10 +14,12 @@ import Icons from "../components/Icons.astro";
 import WorldIcon from "../components/WorldIcon.astro";
 import ShareIcon from "../components/ShareIcon.astro";
 import items from "./../slider.ts";
+
+const initialItem = items[0];
 ---
 
 <Layout>
-	<BackgroundLayer />
+	<BackgroundLayer initialImage={initialItem.image} />
 	<Topbar>
 		<TopbarLogo />
 		<TopbarMenu />
@@ -28,10 +30,116 @@ import items from "./../slider.ts";
 		<ExploreMoreButton />
 	</MainWrapper>
 	<Slider>
-		{items.map((item) => <SliderItem item={item} />)}
+		{
+			items.map((item, index) => (
+				<SliderItem item={item} isActive={index === 0} />
+			))
+		}
 	</Slider>
 	<Icons>
 		<WorldIcon />
 		<ShareIcon />
 	</Icons>
 </Layout>
+
+<script is:inline>
+	const sliderRoot = document.querySelector("[data-slider-root]");
+	const backgroundRoot = document.querySelector("[data-background-root]");
+
+	if (
+		sliderRoot instanceof HTMLElement &&
+		backgroundRoot instanceof HTMLElement
+	) {
+		const backgroundLayers = Array.from(
+			backgroundRoot.querySelectorAll("[data-background-layer]"),
+		);
+		const sliderItems = Array.from(
+			sliderRoot.querySelectorAll("[data-slider-item]"),
+		);
+
+		let currentImage = sliderItems.find((item) =>
+			item.classList.contains("active"),
+		)?.dataset.image;
+		let transitionTimer = 0;
+		let requestToken = 0;
+
+		const setActiveItem = (nextItem) => {
+			for (const item of sliderItems) {
+				const isActive = item === nextItem;
+				item.classList.toggle("active", isActive);
+				item.setAttribute("aria-pressed", isActive ? "true" : "false");
+			}
+		};
+
+		const getVisibleLayer = () =>
+			backgroundLayers.find(
+				(layer) => layer.dataset.state === "visible",
+			) ?? backgroundLayers[0];
+
+		const getHiddenLayer = () =>
+			backgroundLayers.find(
+				(layer) => layer.dataset.state !== "visible",
+			) ?? backgroundLayers[1];
+
+		const swapBackgroundImage = (nextImage) => {
+			const visibleLayer = getVisibleLayer();
+			const hiddenLayer = getHiddenLayer();
+
+			if (
+				!(visibleLayer instanceof HTMLElement) ||
+				!(hiddenLayer instanceof HTMLElement)
+			) {
+				return;
+			}
+
+			hiddenLayer.style.backgroundImage = `url(${nextImage})`;
+
+			requestAnimationFrame(() => {
+				hiddenLayer.dataset.state = "visible";
+				visibleLayer.dataset.state = "hidden";
+			});
+
+			window.clearTimeout(transitionTimer);
+			transitionTimer = window.setTimeout(() => {
+				visibleLayer.style.backgroundImage = "";
+			}, 1000);
+		};
+
+		sliderRoot.addEventListener("click", (event) => {
+			const target = event.target;
+
+			if (!(target instanceof Element)) {
+				return;
+			}
+
+			const nextItem = target.closest("[data-slider-item]");
+
+			if (!(nextItem instanceof HTMLButtonElement)) {
+				return;
+			}
+
+			const nextImage = nextItem.dataset.image;
+
+			if (!nextImage || nextImage === currentImage) {
+				setActiveItem(nextItem);
+				return;
+			}
+
+			setActiveItem(nextItem);
+			requestToken += 1;
+			const token = requestToken;
+			const imageLoader = new Image();
+
+			imageLoader.addEventListener("load", () => {
+				if (token !== requestToken) {
+					return;
+				}
+
+				swapBackgroundImage(nextImage);
+				currentImage = nextImage;
+			});
+
+			imageLoader.src = nextImage;
+		});
+	}
+</script>

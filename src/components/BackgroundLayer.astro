@@ -1,16 +1,38 @@
 ---
-import UltraLuxuryExoticDestinationBaliTropicalJungleResortWithInfinityPool from "./../assets/ultra_luxury_exotic_destination_bali_tropical_jungle_resort_with_infinity_pool.png";
+interface Props {
+    initialImage: string;
+}
+
+const { initialImage } = Astro.props;
 ---
 
-<div
-    class="fixed inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out scale-105"
-    style={`background-image: url(${UltraLuxuryExoticDestinationBaliTropicalJungleResortWithInfinityPool.src});`}
->
+<div class="fixed inset-0 scale-105" data-background-root>
+    <div
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out background-layer"
+        data-background-layer
+        data-state="visible"
+        style={`background-image: url(${initialImage});`}
+    >
+    </div>
+    <div
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out background-layer"
+        data-background-layer
+        data-state="hidden"
+    >
+    </div>
     <div class="absolute inset-0 bg-black/20 backdrop-brightness-90"></div>
     <div class="absolute inset-0 editorial-overlay"></div>
 </div>
 
 <style>
+    .background-layer[data-state="visible"] {
+        opacity: 1;
+    }
+
+    .background-layer[data-state="hidden"] {
+        opacity: 0;
+    }
+
     .editorial-overlay {
         background: linear-gradient(
             to bottom,

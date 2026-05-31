@@ -3,15 +3,22 @@ import type { SliderItem } from "./../slider.ts";
 
 interface Props {
     item: SliderItem;
+    isActive?: boolean;
 }
 
-const { item } = Astro.props;
+const { item, isActive = false } = Astro.props;
 const { location, place, image } = item;
 ---
 
 <button
-    class="flex-none w-52 snap-start group outline-none focus:ring-0 cursor-pointer"
+    class:list={[
+        "flex-none w-52 snap-start group outline-none focus:ring-0 cursor-pointer",
+        { active: isActive },
+    ]}
+    type="button"
     data-image={image}
+    data-slider-item
+    aria-pressed={isActive ? "true" : "false"}
 >
     <div
         class="relative aspect-4/5 overflow-hidden mb-3 border border-white/10 group-hover:border-white/40 transition-all duration-500"
